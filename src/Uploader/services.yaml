@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    app.image_uploader:
+        class: App\Uploader\FileUploader\ImageUploader
+
+    App\Uploader\FileUploader\FileUploader: '@app.image_uploader'
+
+    app.minio_storage:
+        class: App\Uploader\Storage\MinioStorage
+        arguments:
+            $client: '@Aws\S3\S3Client'
+            $bucketName: 'some-name'
+            $hostName: 'external-hostname'
+
+    App\Uploader\Storage\FileStorage: '@app.minio_storage'

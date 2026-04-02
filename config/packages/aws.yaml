@@ -1,0 +1,8 @@
+aws:
+    version: latest
+    region: eu-central-1
+    use_path_style_endpoint: true
+    endpoint: "%env(your_env_variable)%"
+    credentials:
+        key: "%env(your_env_variable)%"
+        secret: "%env(your_env_variable)%"

@@ -1,0 +1,29 @@
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    restart: always
+    command: server /storage --console-address ":9090"
+    volumes:
+      - minio_storage:/storage
+    environment:
+      MINIO_ROOT_USER: ${your_env_variable}
+      MINIO_ROOT_PASSWORD: ${your_env_variable}
+      MINIO_SKIP_CLIENT: ${your_env_variable:-yes}
+      MINIO_DEFAULT_BUCKETS: ${your_env_variable:-minio_default_bucket}
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+
+  minio-bucket:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 5;
+      mc alias set minio http://minio:9000 ${your_env_variable} ${your_env_variable};
+      mc mb minio/${your_env_variable} --ignore-existing;
+      mc anonymous set download minio/${your_env_variable};
+      exit 0;
+      "
